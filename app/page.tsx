@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
+import NavigationBar from "@/components/navigation-bar"
 
 export default function Home() {
   return (
@@ -35,8 +36,10 @@ export default function Home() {
         </div>
       </div>
 
+      <NavigationBar />
+
       <footer className="py-4 text-center text-sm text-gray-500">
-        &copy; {new Date().getFullYear()} Roomie4Sac - Sacramento State University
+        &copy; {new Date().getFullYear()} Roomies4Sac - Sacramento State University
       </footer>
     </div>
   )
