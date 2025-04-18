@@ -9,7 +9,12 @@ export default function Home() {
       <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-primary mb-2">Roomie4Sac</h1>
-          <p className="text-xl text-gray-600">Find your perfect Sacramento State roommate</p>
+          <p className="text-xl text-balance text-gray-600">
+            Find your perfect! 
+            <br />
+            Roomie4Sac is a platform that connects students at Sacramento State with potential roommates.
+            <br />
+          </p>
         </div>
 
         <div className="relative w-full max-w-md h-80 mb-8">
