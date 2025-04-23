@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
+import NavigationBar from "@/components/navigation-bar"
 
 export default function Home() {
   return (
@@ -8,7 +9,12 @@ export default function Home() {
       <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-primary mb-2">Roomie4Sac</h1>
-          <p className="text-xl text-gray-600">Find your perfect Sacramento State roommate</p>
+          <p className="text-xl text-balance text-gray-600">
+            Find your perfect! 
+            <br />
+            Roomie4Sac is a platform that connects students at Sacramento State with potential roommates.
+            <br />
+          </p>
         </div>
 
         <div className="relative w-full max-w-md h-80 mb-8">
@@ -28,15 +34,17 @@ export default function Home() {
 
         <div className="w-full max-w-xs space-y-4">
           <Link href="/swipe" className="w-full">
-            <Button className="w-full" size="lg">
+            <Button className="w-full hover:bg-yellow-500 hover:text-green-900" size="lg">
               Get Started
             </Button>
           </Link>
         </div>
       </div>
 
+      <NavigationBar />
+
       <footer className="py-4 text-center text-sm text-gray-500">
-        &copy; {new Date().getFullYear()} Roomie4Sac - Sacramento State University
+        &copy; {new Date().getFullYear()} Roomies4Sac - Sacramento State University
       </footer>
     </div>
   )
