@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Getting Started with the Roomies4Sac Project
 
-## Getting Started
+Welcome to the Roomies4Sac project! This guide will help you set up and run the project on your local machine, even if you're new to web development.
 
-First, run the development server:
+## Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Before you begin, make sure you have the following tools installed:
+
+- **Git:** Used for version control. Download it from [https://git-scm.com/](https://git-scm.com/).
+- **Node.js:** JavaScript runtime environment. Download the LTS version from [https://nodejs.org/en/download](https://nodejs.org/en/download). This also installs **npm** (Node Package Manager).
+
+### Verifying Installation
+
+Open your terminal and run the following commands to check if Git, Node.js, and npm are installed:
+
+```zsh
+git -v
+node -v
+npm -v
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+You should see version numbers for each tool. If you get an error, double-check your installation and PATH settings.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Setup
 
-## Learn More
+1. **Clone the Repository:**
 
-To learn more about Next.js, take a look at the following resources:
+Clone the project repository to your local machine:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```zsh
+git clone https://github.com/arcTanMyAngle/roomies4sac
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Install Dependencies:**
 
-## Deploy on Vercel
+Navigate to the project directory:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```zsh
+cd roomiesWebApp
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Install the project dependencies:
+
+```zsh
+npm install --force
+```
+
+The `--force` flag helps resolve potential dependency conflicts. This step may take a few minutes.
+
+3. **Start the Development Server:**
+
+Start the application:
+
+```zsh
+npm run dev
+```
+
+This will start the app and make it accessible in your browser. The terminal will show the address (usually http://localhost:3000).
+
+4. **Access the Application:**
+
+Open your browser and go to the address provided (usually http://localhost:3000). You should see the Roomie4Sac application running!
+
+## Contributing
+
+- **Commit Frequently:** Use clear and concise commit messages.
+- **Branching:** Create a new branch for each feature or bug fix.
+- **Push Your Changes:** Push your branch to the remote repository when ready.
+- **Pull Requests:** Submit a pull request to merge your changes into the main branch.
+
+## Troubleshooting
+
+If you encounter issues during setup:
+
+- **Check Terminal Output:** Read error messages for clues.
+- **Google the Error:** Search for solutions online.
+- **Ask for Help:** Reach out to team members or experienced developers.
+
+Good luck, and happy coding!
