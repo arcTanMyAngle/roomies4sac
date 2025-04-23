@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import NavigationBar from "@/components/navigation-bar"
@@ -11,7 +12,7 @@ import MatchModal from "@/components/match-modal"
 import type { UserProfile } from "@/lib/types"
 import { calculateCompatibility } from "@/lib/utils"
 import { currentUser, getPotentialMatches, addSwipe } from "@/lib/mock-data"
-import { X, Heart, Loader2 } from "lucide-react"
+import { X, Heart, Loader2, Link as LinkIcon } from "lucide-react"
 import { useSprings, animated, to as interpolate } from "@react-spring/web"
 import { useDrag } from "@use-gesture/react"
 
@@ -96,7 +97,7 @@ export default function SwipePage() {
 
   // Set up gesture handler for swipe
   const bind = useDrag(({ args: [index], down, movement: [mx], direction: [xDir], velocity }) => {
-    const trigger = velocity > 0.2
+    const trigger = velocity[0] > 0.2
     const dir = xDir < 0 ? -1 : 1
 
     if (!down && trigger) {
@@ -110,7 +111,7 @@ export default function SwipePage() {
       if (index !== i) return
       const isGone = gone.has(index)
       const x = isGone ? (200 + window.innerWidth) * dir : down ? mx : 0
-      const rot = mx / 100 + (isGone ? dir * 10 * velocity : 0)
+      const rot = mx / 100 + (isGone ? dir * 10 * velocity[0] : 0)
       const scale = down ? 1.1 : 1
       return {
         x,
@@ -165,7 +166,13 @@ export default function SwipePage() {
   return (
     <div className="min-h-screen bg-gray-50 pb-16">
       <header className="bg-white p-4 shadow-sm">
-        <h1 className="text-2xl font-bold text-center text-primary">Roomie4Sac</h1>
+        <nav className="flex justify-center items-center">
+          <Link
+            href="/"
+            className="text-2xl font-bold text-center text-primary transition-colors hover:text-foreground/60">
+              Roomie4Sac
+          </Link>
+        </nav>
       </header>
 
       <main className="max-w-md mx-auto p-4">

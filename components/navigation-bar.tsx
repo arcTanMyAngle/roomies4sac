@@ -2,21 +2,13 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Heart, MessageSquare, User } from "lucide-react"
+import { Heart, MessageSquare, User } from "lucide-react"
 
 export default function NavigationBar() {
   const pathname = usePathname()
 
   return (
     <div className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 flex items-center justify-around z-10">
-      
-      <Link
-        href="/"
-        className={`flex flex-col items-center justify-center w-1/3 ${pathname === "/" ? "text-primary" : "text-gray-500"}`}
-      >
-        <Home size={24} />
-        <span className="text-xs mt-1">Home</span>
-      </Link>
       
       <Link
         href="/swipe"
