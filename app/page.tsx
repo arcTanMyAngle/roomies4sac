@@ -34,7 +34,7 @@ export default function Home() {
 
         <div className="w-full max-w-xs space-y-4">
           <Link href="/swipe" className="w-full">
-            <Button className="w-full" size="lg">
+            <Button className="w-full hover:bg-yellow-500 hover:text-green-900" size="lg">
               Get Started
             </Button>
           </Link>

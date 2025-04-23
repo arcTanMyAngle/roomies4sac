@@ -169,7 +169,7 @@ export default function SwipePage() {
         <nav className="flex justify-center items-center">
           <Link
             href="/"
-            className="text-2xl font-bold text-center text-primary transition-colors hover:text-foreground/60">
+            className="text-2xl font-bold text-center text-primary transition-colors hover:text-foreground/60 hover:text-yellow-500">
               Roomie4Sac
           </Link>
         </nav>
