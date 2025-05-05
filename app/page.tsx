@@ -19,11 +19,12 @@ export default function Home() {
 
         <div className="relative w-full max-w-md h-80 mb-8">
           <Image
-            src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1470&auto=format&fit=crop"
+            src="/images/landing.jpg"
             alt="Roommates finding each other"
             fill
-            className="object-cover rounded-lg shadow-lg"
             priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 100vw"
+            className="object-cover rounded-lg shadow-lg"
           />
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-primary to-transparent h-1/3 rounded-b-lg flex items-end p-4">
             <div className="text-white font-semibold">
@@ -33,7 +34,7 @@ export default function Home() {
         </div>
 
         <div className="w-full max-w-xs space-y-4">
-          <Link href="/swipe" className="w-full">
+          <Link href="/swipe" className="w-full" prefetch={true}>
             <Button className="w-full hover:bg-yellow-500 hover:text-green-900" size="lg">
               Get Started
             </Button>

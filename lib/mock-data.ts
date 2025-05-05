@@ -8,7 +8,7 @@ export const currentUser: UserProfile = {
   major: "Computer Science",
   year: "Junior",
   bio: "I'm a CS major who enjoys hiking, music, and photography. I'm looking for a roommate who is clean and respectful of quiet hours for studying.",
-  photoURL: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop",
+  imagePath: "/images/student0.jpg",
   dorm: "Riverview Hall",
   preferences: {
     cleanliness: 4,
@@ -23,12 +23,12 @@ export const currentUser: UserProfile = {
 export const mockUsers: UserProfile[] = [
   {
     id: "user-1",
-    name: "Jordan Smith",
+    name: "Riley Thompson",
     age: 19,
     major: "Business Administration",
     year: "Sophomore",
     bio: "Business major looking for a roommate who is social but also respects study time. I enjoy sports, movies, and hanging out with friends.",
-    photoURL: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop",
+    imagePath: "/images/student1.jpg",
     dorm: "Sierra Hall",
     preferences: {
       cleanliness: 3,
@@ -45,7 +45,7 @@ export const mockUsers: UserProfile[] = [
     major: "Psychology",
     year: "Senior",
     bio: "Psychology student who loves reading, yoga, and quiet evenings. Looking for a clean and considerate roommate.",
-    photoURL: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=400&auto=format&fit=crop",
+    imagePath: "/images/student2.jpg",
     dorm: "American River Courtyard",
     preferences: {
       cleanliness: 5,
@@ -62,7 +62,7 @@ export const mockUsers: UserProfile[] = [
     major: "Engineering",
     year: "Junior",
     bio: "Engineering student who enjoys gaming, tech projects, and occasional parties. Looking for someone with similar interests.",
-    photoURL: "https://images.unsplash.com/photo-1463453091185-61582044d556?q=80&w=400&auto=format&fit=crop",
+    imagePath: "/images/student3.jpg",
     dorm: "Desmond Hall",
     preferences: {
       cleanliness: 3,
@@ -79,7 +79,7 @@ export const mockUsers: UserProfile[] = [
     major: "Art",
     year: "Freshman",
     bio: "Art major who loves painting, music, and creative projects. Looking for an open-minded roommate who doesn't mind some artistic mess.",
-    photoURL: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=400&auto=format&fit=crop",
+    imagePath: "/images/student5.jpg",
     dorm: "Draper Hall",
     preferences: {
       cleanliness: 2,
@@ -96,7 +96,7 @@ export const mockUsers: UserProfile[] = [
     major: "Biology",
     year: "Senior",
     bio: "Pre-med student looking for a quiet and clean living environment. I spend most of my time studying but enjoy hiking and cooking on weekends.",
-    photoURL: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400&auto=format&fit=crop",
+    imagePath: "/images/student4.jpg",
     dorm: "Riverview Hall",
     preferences: {
       cleanliness: 5,
@@ -105,6 +105,40 @@ export const mockUsers: UserProfile[] = [
       schedule: "Early Bird",
     },
     createdAt: Date.now() - 5 * 24 * 60 * 60 * 1000,
+  },
+  {
+    id: "user-8",
+    name: "Jordan Miles",
+    age: 19,
+    major: "Communication Studies",
+    year: "Sophomore",
+    bio: "Enjoy talking, group study sessions, socializing. Need a clean roommate!",
+    imagePath: "/images/student6.jpg",
+    dorm: "Sierra Hall",
+    preferences: {
+      cleanliness: 3,
+      noiseLevel: 4,
+      guestComfort: 3,
+      schedule: "Night Owl",
+    },
+    createdAt: Date.now() - 3 * 24 * 60 * 60 * 1000,
+  },
+  {
+    id: "user-9",
+    name: "Taylor White",
+    age: 22,
+    major: "History",
+    year: "Senior",
+    bio: "Book collector, museum buff. Seeking quiet environment. Fine with occasional guests.",
+    imagePath: "/images/student1.jpg",
+    dorm: "Riverview Hall",
+    preferences: {
+      cleanliness: 4,
+      noiseLevel: 2,
+      guestComfort: 5,
+      schedule: "Early Bird",
+    },
+    createdAt: Date.now() - 2 * 24 * 60 * 60 * 1000,
   },
 ]
 
@@ -273,13 +307,7 @@ export function addSwipe(targetId: string, action: "like" | "dislike"): SwipeAct
 
     if (otherUserLiked) {
       // Create a new match
-      const newMatch: Match = {
-        id: `match-${Date.now()}`,
-        users: ["current-user", targetId],
-        createdAt: Date.now(),
-      }
-
-      mockMatches.push(newMatch)
+      createMatch("current-user", targetId)
       return newSwipe
     }
   }
@@ -296,4 +324,14 @@ export function markMessagesAsRead(matchId: string): void {
       return message
     })
   }
+}
+
+export function createMatch(currentUserId: string, matchedUserId: string): Match {
+  const newMatch: Match = {
+    id: `match-${Date.now()}`,
+    users: [currentUserId, matchedUserId],
+    createdAt: Date.now(),
+  }
+  mockMatches.push(newMatch)
+  return newMatch
 }

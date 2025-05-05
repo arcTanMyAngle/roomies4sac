@@ -108,7 +108,7 @@ export default function MatchesPage() {
                 <div className="relative">
                   <div className="w-14 h-14 rounded-full overflow-hidden">
                     <Image
-                      src={match.user.photoURL || "/placeholder.svg?height=56&width=56"}
+                      src={match.user.imagePath || "/placeholder.svg?height=56&width=56"}
                       alt={match.user.name}
                       width={56}
                       height={56}

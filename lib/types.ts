@@ -5,7 +5,7 @@ export interface UserProfile {
   major: string
   year: string
   bio: string
-  photoURL: string
+  imagePath: string
   preferences: {
     cleanliness: number
     noiseLevel: number

@@ -11,22 +11,19 @@ import PreferenceRating from "@/components/preference-rating"
 import MatchModal from "@/components/match-modal"
 import type { UserProfile } from "@/lib/types"
 import { calculateCompatibility } from "@/lib/utils"
-import { currentUser, getPotentialMatches, addSwipe } from "@/lib/mock-data"
-import { X, Heart, Loader2, Link as LinkIcon } from "lucide-react"
+import { currentUser, getPotentialMatches, addSwipe, createMatch } from "@/lib/mock-data"
+import { X, Heart, Loader2 } from "lucide-react"
 import { useSprings, animated, to as interpolate } from "@react-spring/web"
 import { useDrag } from "@use-gesture/react"
 
-// Swipe card constants
+// Remove any top-3 slice; show all
 const to = (i: number) => ({
   x: 0,
   y: i * -4,
   scale: 1,
-  rot: -10 + Math.random() * 20,
-  delay: i * 100,
+  rot: 0,
 })
-
-const from = (_i: number) => ({ x: 0, rot: 0, scale: 1.5, y: -1000 })
-
+const from = () => ({ x: 0, rot: 0, scale: 1.5, y: -1000 })
 const trans = (r: number, s: number) =>
   `perspective(1500px) rotateX(10deg) rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`
 
@@ -36,79 +33,70 @@ export default function SwipePage() {
   const [loading, setLoading] = useState(true)
   const [showMatch, setShowMatch] = useState(false)
   const [matchedUser, setMatchedUser] = useState<UserProfile | null>(null)
-  const [gone] = useState(() => new Set())
+  const [currentMatchId, setCurrentMatchId] = useState<string | null>(null)
+  const [gone] = useState(() => new Set<number>())
 
   // Fetch potential matches
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Get users who have not been swiped on
         const potentialUsers = getPotentialMatches()
         setPotentialMatches(potentialUsers)
-        setLoading(false)
       } catch (error) {
         console.error("Error fetching data:", error)
+      } finally {
         setLoading(false)
       }
     }
-
     fetchData()
   }, [])
 
-  // Set up springs for card animation
-  const [props, api] = useSprings(potentialMatches.length || 0, (i) => ({
+  const [props, api] = useSprings(potentialMatches.length, (i) => ({
     ...to(i),
-    from: from(i),
+    from: from(),
   }))
 
-  // Update springs when potentialMatches changes
   useEffect(() => {
     api.start((i) => to(i))
   }, [potentialMatches, api])
 
-  // Handle card swipe
-  const handleSwipe = async (direction: "left" | "right", index: number) => {
-    if (potentialMatches.length === 0) return
-
-    const targetUser = potentialMatches[index]
+  async function handleSwipe(direction: "left" | "right", index: number) {
+    if (!potentialMatches[index]) return
+    const user = potentialMatches[index]
     const isLike = direction === "right"
 
-    // Record swipe in mock data
     try {
-      const swipeResult = addSwipe(targetUser.id, isLike ? "like" : "dislike")
+      const swipeResult = addSwipe(user.id, isLike ? "like" : "dislike")
+      setPotentialMatches((prev) => prev.filter((_, i) => i !== index))
 
-      // Check if this created a match
+      // If we matched, show modal
       if (isLike && swipeResult) {
-        // Find if there's a new match with this user
-        const matchExists = potentialMatches.some(
-          (user) => user.id === targetUser.id && addSwipe(targetUser.id, "like") !== null,
-        )
-
-        if (matchExists) {
-          // Show match modal
-          setMatchedUser(targetUser)
-          setShowMatch(true)
-        }
+        const newMatch = createMatch("current-user", user.id)
+        setCurrentMatchId(newMatch.id)
+        setMatchedUser(user)
+        setShowMatch(true)
+        // Store matched user in localStorage
+        const chatUsers = JSON.parse(localStorage.getItem("chatUsers") || "[]")
+        chatUsers.push(user)
+        localStorage.setItem("chatUsers", JSON.stringify(chatUsers))
       }
     } catch (error) {
       console.error("Error recording swipe:", error)
     }
   }
 
-  // Set up gesture handler for swipe
+  // Use drag
   const bind = useDrag(({ args: [index], down, movement: [mx], direction: [xDir], velocity }) => {
     const trigger = velocity[0] > 0.2
     const dir = xDir < 0 ? -1 : 1
 
     if (!down && trigger) {
       gone.add(index)
-
-      // Handle swipe action in database
       handleSwipe(dir === 1 ? "right" : "left", index)
     }
 
     api.start((i) => {
-      if (index !== i) return
+      if (i !== index) return
       const isGone = gone.has(index)
       const x = isGone ? (200 + window.innerWidth) * dir : down ? mx : 0
       const rot = mx / 100 + (isGone ? dir * 10 * velocity[0] : 0)
@@ -118,33 +106,26 @@ export default function SwipePage() {
         rot,
         scale,
         delay: undefined,
-        config: { friction: 50, tension: down ? 800 : isGone ? 200 : 500 },
+        config: { friction: 30, tension: down ? 600 : isGone ? 200 : 400 },
       }
     })
-
-    if (!down && gone.size === potentialMatches.length) {
-      setTimeout(() => {
-        gone.clear()
-        api.start((i) => to(i))
-      }, 600)
-    }
   })
 
-  // Handle manual swipe button clicks
-  const handleButtonSwipe = (direction: "left" | "right") => {
-    if (potentialMatches.length === 0) return
+  function handleButtonSwipe(direction: "left" | "right") {
+    if (!potentialMatches.length) return
 
-    const index = potentialMatches.length - 1 - [...gone].length
+    // Use the last index as the top card
+    const index = potentialMatches.length - 1
     if (index < 0) return
 
     gone.add(index)
 
     api.start((i) => {
-      if (index !== i) return
+      if (i !== index) return
       const x = (200 + window.innerWidth) * (direction === "right" ? 1 : -1)
       return {
         x,
-        rot: (direction === "right" ? 1 : -1) * 10,
+        rot: direction === "right" ? 10 : -10,
         scale: 1,
         delay: undefined,
         config: { friction: 50, tension: 200 },
@@ -165,13 +146,15 @@ export default function SwipePage() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-16">
+      {/* Header with Back to Home */}
       <header className="bg-white p-4 shadow-sm">
-        <nav className="flex justify-center items-center">
-          <Link
-            href="/"
-            className="text-2xl font-bold text-center text-primary transition-colors hover:text-foreground/60 hover:text-yellow-500">
-              Roomie4Sac
+        <nav className="flex justify-between items-center max-w-md mx-auto">
+          <Link href="/" className="text-2xl font-bold text-primary hover:text-yellow-500">
+            Roomie4Sac
           </Link>
+          <Button variant="outline" onClick={() => router.push("/")}>
+            Back to Home
+          </Button>
         </nav>
       </header>
 
@@ -182,7 +165,7 @@ export default function SwipePage() {
               <X className="h-12 w-12 text-gray-400" />
             </div>
             <h2 className="text-xl font-semibold mb-2">No more profiles</h2>
-            <p className="text-gray-600 mb-6">We've run out of potential roommates to show you. Check back later!</p>
+            <p className="text-gray-600 mb-6">We've run out of potential roommates to show you!</p>
             <Button onClick={() => router.push("/matches")}>View Your Matches</Button>
           </div>
         ) : (
@@ -204,13 +187,18 @@ export default function SwipePage() {
                   >
                     <Card className="w-full h-full overflow-hidden">
                       <div className="relative h-[60%]">
-                        <Image
-                          src={potentialMatches[i]?.photoURL || "/placeholder.svg?height=300&width=400"}
-                          alt={potentialMatches[i]?.name || "Profile"}
-                          fill
-                          className="object-cover"
-                          priority
-                        />
+                        {potentialMatches[i] ? (
+                          <Image
+                            src={potentialMatches[i]?.imagePath || "/placeholder.svg?height=300&width=400"}
+                            alt={potentialMatches[i]?.name || "Profile"}
+                            fill
+                            loading="lazy"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gray-200 animate-pulse" />
+                        )}
                         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
                           <h2 className="text-white text-xl font-bold">
                             {potentialMatches[i]?.name}, {potentialMatches[i]?.age}
@@ -225,14 +213,12 @@ export default function SwipePage() {
                       </div>
 
                       <div className="p-4 h-[40%] overflow-y-auto">
-                        <div className="flex items-center mb-3">
-                          <div className="bg-green-100 text-primary text-sm font-medium px-3 py-1 rounded-full">
-                            {calculateCompatibility(currentUser.preferences, potentialMatches[i]?.preferences)}% Match
-                          </div>
+                        <div className="bg-green-100 text-primary text-sm font-medium px-3 py-1 inline-block rounded-full mb-3">
+                          {calculateCompatibility(currentUser.preferences, potentialMatches[i]?.preferences)}% Match
                         </div>
-
-                        <p className="text-gray-700 mb-4 line-clamp-2">{potentialMatches[i]?.bio}</p>
-
+                        <p className="text-gray-700 mb-4 line-clamp-3">
+                          {potentialMatches[i]?.bio}
+                        </p>
                         <div className="space-y-2">
                           <PreferenceRating
                             label="Cleanliness"
@@ -248,7 +234,9 @@ export default function SwipePage() {
                           />
                           <div className="flex items-center justify-between">
                             <span className="text-sm font-medium text-gray-700">Schedule</span>
-                            <span className="text-sm text-gray-600">{potentialMatches[i]?.preferences.schedule}</span>
+                            <span className="text-sm text-gray-600">
+                              {potentialMatches[i]?.preferences.schedule}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -268,7 +256,6 @@ export default function SwipePage() {
                 <X className="h-8 w-8" />
                 <span className="sr-only">Dislike</span>
               </Button>
-
               <Button
                 size="lg"
                 className="h-16 w-16 rounded-full bg-primary hover:bg-primary/90"
@@ -285,7 +272,12 @@ export default function SwipePage() {
       <NavigationBar />
 
       {showMatch && matchedUser && (
-        <MatchModal currentUser={currentUser} matchedUser={matchedUser} onClose={() => setShowMatch(false)} />
+        <MatchModal
+          currentUser={currentUser}
+          matchedUser={matchedUser}
+          matchId={currentMatchId!}
+          onClose={() => setShowMatch(false)}
+        />
       )}
     </div>
   )

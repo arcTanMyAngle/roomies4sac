@@ -10,17 +10,18 @@ import type { UserProfile } from "@/lib/types"
 interface MatchModalProps {
   currentUser: UserProfile
   matchedUser: UserProfile
+  matchId: string
   onClose: () => void
 }
 
-export default function MatchModal({ currentUser, matchedUser, onClose }: MatchModalProps) {
+export default function MatchModal({ currentUser, matchedUser, matchId, onClose }: MatchModalProps) {
   const router = useRouter()
   const [isClosing, setIsClosing] = useState(false)
 
   const handleSendMessage = () => {
     setIsClosing(true)
     setTimeout(() => {
-      router.push(`/chat/${matchedUser.id}`)
+      router.push(`/chat/${matchId}`)
       onClose()
     }, 300)
   }
@@ -48,7 +49,7 @@ export default function MatchModal({ currentUser, matchedUser, onClose }: MatchM
           <div className="relative">
             <div className="w-20 h-20 rounded-full border-2 border-primary overflow-hidden">
               <Image
-                src={currentUser.photoURL || "/placeholder.svg?height=80&width=80"}
+                src={currentUser.imagePath || "/placeholder.svg?height=80&width=80"}
                 alt={currentUser.name}
                 width={80}
                 height={80}
@@ -60,7 +61,7 @@ export default function MatchModal({ currentUser, matchedUser, onClose }: MatchM
           <div className="relative">
             <div className="w-20 h-20 rounded-full border-2 border-primary overflow-hidden">
               <Image
-                src={matchedUser.photoURL || "/placeholder.svg?height=80&width=80"}
+                src={matchedUser.imagePath || "/placeholder.svg?height=80&width=80"}
                 alt={matchedUser.name}
                 width={80}
                 height={80}

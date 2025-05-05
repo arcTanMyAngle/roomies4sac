@@ -49,8 +49,8 @@ export default function EditProfilePage() {
     setNoiseLevel(profile.preferences.noiseLevel)
     setGuestComfort(profile.preferences.guestComfort)
     setSchedule(profile.preferences.schedule)
-    setCurrentPhotoURL(profile.photoURL)
-    setPhotoPreview(profile.photoURL)
+    setCurrentPhotoURL(profile.imagePath)
+    setPhotoPreview(profile.imagePath)
 
     setLoading(false)
   }, [])

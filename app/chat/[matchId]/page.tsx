@@ -110,7 +110,7 @@ export default function ChatPage({ params }: { params: { matchId: string } }) {
           <div className="flex items-center">
             <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
               <Image
-                src={otherUser.photoURL || "/placeholder.svg?height=40&width=40"}
+                src={otherUser.imagePath || "/placeholder.svg?height=40&width=40"}
                 alt={otherUser.name}
                 width={40}
                 height={40}

@@ -47,7 +47,7 @@ export default function ProfilePage() {
               <div className="relative w-24 h-24 mx-auto mb-4">
                 <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white">
                   <Image
-                    src={profile.photoURL || "/placeholder.svg?height=96&width=96"}
+                    src={profile.imagePath || "/placeholder.svg?height=96&width=96"}
                     alt={profile.name}
                     width={96}
                     height={96}
